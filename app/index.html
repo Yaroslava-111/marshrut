@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Маршрут — Планировщик поездок</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Верхняя навигация (десктоп и планшет) -->
+  <header class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <a class="topbar__brand" href="#section-cover">
+        <span class="topbar__brand-mark" aria-hidden="true"></span>
+        <span class="topbar__brand-text">Маршрут</span>
+      </a>
+
+      <nav class="topbar__nav" id="topbar-nav" aria-label="Разделы поездки">
+        <a class="topbar__link" href="#section-cover" data-nav="section-cover">Обложка</a>
+        <a class="topbar__link" href="#section-pace" data-nav="section-pace">Темп</a>
+        <a class="topbar__link" href="#section-route" data-nav="section-route">Маршрут</a>
+        <a class="topbar__link" href="#section-budget" data-nav="section-budget">Бюджет</a>
+        <a class="topbar__link" href="#section-bookings" data-nav="section-bookings">Бронирования</a>
+        <a class="topbar__link" href="#section-checklist" data-nav="section-checklist">Подготовка</a>
+      </nav>
+
+      <button type="button" class="topbar__profile" id="topbar-profile"
+              aria-label="Профиль (заглушка)" title="Профиль — раздел в разработке">
+        <span class="topbar__avatar" aria-hidden="true">М</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app" class="app">
+
+    <!-- 0. Список поездок -->
+    <section class="section section--trips" id="section-trips">
+      <header class="section__header">
+        <div class="trips-header">
+          <h2 class="section__title" id="current-trip-name">Мои поездки</h2>
+          <span class="trips-header__date" id="current-trip-dates"></span>
+        </div>
+        <div class="section__header-actions">
+          <button type="button" class="btn btn--ghost" id="trips-list-btn">Все поездки</button>
+          <button type="button" class="btn btn--primary btn--sm" id="add-trip-btn">+ Новая</button>
+        </div>
+      </header>
+    </section>
+
+    <!-- 1. Обложка поездки -->
+    <section class="cover" id="section-cover">
+      <div class="cover__bg" aria-hidden="true"></div>
+
+      <!-- Сцена обложки: солнце, дорожка на воде и три слоя волн.
+           Только градиенты и встроенный SVG, без внешних картинок.
+           Волны нарисованы на удвоенной ширине: сдвиг на половину
+           попадает в ту же фазу, поэтому дрейф зациклен без стыка. -->
+      <div class="cover__scene" aria-hidden="true">
+        <span class="cover__sun"></span>
+        <div class="cover__waves">
+          <svg class="cover__wave cover__wave--back" viewBox="0 0 2880 140" preserveAspectRatio="none">
+            <path d="M0,74 q180,-30 360,0 t360,0 t360,0 t360,0 t360,0 t360,0 t360,0 t360,0 V140 H0 Z"/>
+          </svg>
+          <svg class="cover__wave cover__wave--mid" viewBox="0 0 2880 140" preserveAspectRatio="none">
+            <path d="M0,86 q180,-38 360,0 t360,0 t360,0 t360,0 t360,0 t360,0 t360,0 t360,0 V140 H0 Z"/>
+          </svg>
+          <svg class="cover__wave cover__wave--front" viewBox="0 0 2880 140" preserveAspectRatio="none">
+            <path d="M0,100 q180,-26 360,0 t360,0 t360,0 t360,0 t360,0 t360,0 t360,0 t360,0 V140 H0 Z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="cover__content">
+        <p class="cover__eyebrow" id="cover-eyebrow">Поездка</p>
+        <h1 class="cover__title" id="cover-title">Лиссабон и океан</h1>
+        <div class="cover__facts">
+          <span class="cover__fact" id="cover-dates">12–18 сентября</span>
+          <span class="cover__fact" id="cover-days">7 дней</span>
+        </div>
+        <div class="cover__countdown" id="countdown">
+          <span class="cover__countdown-label">До начала поездки</span>
+          <div class="cover__countdown-values" id="countdown-values">
+            <span class="countdown-unit"><b id="cd-days">–</b><i>дней</i></span>
+            <span class="countdown-unit"><b id="cd-hours">–</b><i>часов</i></span>
+            <span class="countdown-unit"><b id="cd-mins">–</b><i>минут</i></span>
+            <span class="countdown-unit"><b id="cd-secs">–</b><i>секунд</i></span>
+          </div>
+        </div>
+      </div>
+      <div class="cover__strip" id="cover-strip" aria-hidden="true"></div>
+    </section>
+
+    <!-- 2. Темп путешествия -->
+    <section class="section section--pace" id="section-pace">
+      <header class="section__header">
+        <h2 class="section__title">Темп путешествия</h2>
+        <p class="section__subtitle">Выберите, насколько насыщенным будет ваш день</p>
+      </header>
+      <div class="pace">
+        <div class="pace__toggle" role="tablist" aria-label="Темп путешествия">
+          <button type="button" class="pace__option" data-pace="calm" role="tab" aria-selected="true" aria-controls="route-content">
+            Спокойно
+          </button>
+          <button type="button" class="pace__option" data-pace="active" role="tab" aria-selected="false" aria-controls="route-content">
+            Насыщенно
+          </button>
+          <span class="pace__indicator" id="pace-indicator"></span>
+        </div>
+        <div class="pace__summary" id="pace-summary">
+          <div class="pace__summary-item">
+            <span class="pace__label">Событий в день</span>
+            <span class="pace__value" id="pace-events">–</span>
+          </div>
+          <div class="pace__summary-item">
+            <span class="pace__label">Стоимость дня</span>
+            <span class="pace__value" id="pace-cost">–</span>
+          </div>
+          <div class="pace__summary-item">
+            <span class="pace__label">Прогноз расходов</span>
+            <span class="pace__value" id="pace-forecast">–</span>
+          </div>
+        </div>
+        <p class="pace__hint" id="pace-hint"></p>
+      </div>
+    </section>
+
+    <!-- 3. Маршрут по дням -->
+    <section class="section section--route" id="section-route">
+      <header class="section__header">
+        <h2 class="section__title">Маршрут по дням</h2>
+        <p class="section__subtitle">План путешествия день за днём</p>
+        <div class="section__header-actions">
+          <button type="button" class="btn btn--primary btn--sm" id="add-event-btn">+ Событие</button>
+        </div>
+      </header>
+      <div class="route">
+        <div class="route__days-wrap" id="route-days-wrap">
+          <div class="route__days" id="route-days" role="tablist" aria-label="Дни поездки"></div>
+          <div class="route__days-fade route__days-fade--left" id="route-fade-left" aria-hidden="true"></div>
+          <div class="route__days-fade route__days-fade--right" id="route-fade-right" aria-hidden="true"></div>
+          <div class="route__days-skeleton" id="route-skeleton" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="route__content" id="route-content" role="tabpanel" aria-label="События выбранного дня"></div>
+      </div>
+    </section>
+
+    <!-- 4. Бюджет -->
+    <section class="section section--budget" id="section-budget">
+      <header class="section__header">
+        <h2 class="section__title">Бюджет</h2>
+        <p class="section__subtitle">Общий план расходов на поездку</p>
+      </header>
+      <div class="budget">
+        <div class="budget__chart-wrap">
+          <div class="budget__chart" id="budget-chart" data-animated="false">
+            <div class="budget__chart-center">
+              <span class="budget__chart-total-label">Запланировано</span>
+              <span class="budget__chart-total">–</span>
+            </div>
+          </div>
+          <div class="budget__chart-legend" id="budget-legend"></div>
+        </div>
+        <div class="budget__summary">
+          <div class="budget__row">
+            <span class="budget__row-label">Общий бюджет</span>
+            <span class="budget__row-value" id="budget-total">–</span>
+          </div>
+          <div class="budget__progress">
+            <span class="budget__progress-bar" id="budget-progress-bar"></span>
+          </div>
+          <div class="budget__row budget__row--planned">
+            <span class="budget__row-label">Запланировано</span>
+            <span class="budget__row-value" id="budget-planned-row">–</span>
+          </div>
+          <div class="budget__row budget__row--left">
+            <span class="budget__row-label">Остаток</span>
+            <span class="budget__row-value" id="budget-left">–</span>
+          </div>
+          <ul class="budget__categories" id="budget-categories"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Бронирования -->
+    <section class="section section--bookings" id="section-bookings">
+      <header class="section__header">
+        <h2 class="section__title">Бронирования</h2>
+        <p class="section__subtitle">Перелёт, отель, поезд и экскурсии</p>
+        <div class="section__header-actions">
+          <button type="button" class="btn btn--primary btn--sm" id="add-booking-btn">+ Бронирование</button>
+        </div>
+      </header>
+      <div class="bookings__list" id="bookings-list"></div>
+    </section>
+
+    <!-- 6. Чек-лист подготовки -->
+    <section class="section section--checklist" id="section-checklist">
+      <header class="section__header">
+        <h2 class="section__title">Чек-лист подготовки</h2>
+        <p class="section__subtitle">Ничего не забыть перед поездкой</p>
+        <div class="section__header-actions">
+          <button type="button" class="btn btn--ghost" id="checklist-reset">Сбросить учебные данные</button>
+        </div>
+      </header>
+      <div class="checklist">
+        <div class="checklist__tabs" id="checklist-tabs" role="tablist" aria-label="Категории подготовки"></div>
+        <ul class="checklist__items" id="checklist-items"></ul>
+        <form class="checklist__add" id="checklist-add" autocomplete="off">
+          <input type="text" class="checklist__add-input" id="checklist-add-input"
+                 placeholder="Новая задача..." aria-label="Название задачи">
+          <button type="submit" class="btn btn--primary btn--sm">Добавить</button>
+        </form>
+        <p class="checklist__progress" id="checklist-progress"></p>
+      </div>
+    </section>
+
+    <!-- 7. Мобильный режим «Сегодня» -->
+    <section class="today" id="section-today" hidden>
+      <header class="today__header">
+        <h2 class="today__title" id="today-title">Сегодня</h2>
+        <span class="today__date" id="today-date"></span>
+      </header>
+      <div class="today__card today__card--event">
+        <span class="today__card-label" id="today-event-label">Ближайшее событие</span>
+        <div class="today__card-main">
+          <span class="today__event-time" id="today-event-time"></span>
+          <div class="today__event-info">
+            <span class="today__event-title" id="today-event-title"></span>
+            <span class="today__event-place" id="today-event-place"></span>
+          </div>
+        </div>
+        <span class="badge badge--static" id="today-event-status"></span>
+      </div>
+      <div class="today__card today__card--task">
+        <span class="today__card-label">Следующая задача</span>
+        <div class="today__task-info">
+          <span class="today__task-text" id="today-task-text"></span>
+          <span class="today__task-cat" id="today-task-cat"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Состояние ошибки (глобальное) -->
+    <div class="app-error" id="app-error" hidden role="alert"></div>
+
+  </main>
+
+  <!-- Модалка: список поездок -->
+  <div class="modal" id="trips-modal" hidden>
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__body" role="dialog" aria-modal="true" aria-labelledby="trips-modal-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="trips-modal-title">Мои поездки</h2>
+        <button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      </header>
+      <div class="modal__content">
+        <div class="trips-list" id="trips-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка: новая поездка -->
+  <div class="modal" id="new-trip-modal" hidden>
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__body" role="dialog" aria-modal="true" aria-labelledby="new-trip-modal-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="new-trip-modal-title">Новая поездка</h2>
+        <button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      </header>
+      <form class="modal__content" id="new-trip-form" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="trip-name-input">Название поездки</label>
+          <input type="text" class="form-input" id="trip-name-input" placeholder="Например: Отдых в Сочи" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="trip-start-input">Дата начала</label>
+            <input type="date" class="form-input" id="trip-start-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="trip-end-input">Дата окончания</label>
+            <input type="date" class="form-input" id="trip-end-input" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="trip-budget-input">Бюджет (₽)</label>
+          <input type="number" class="form-input" id="trip-budget-input" placeholder="100000" min="1" step="1000" required>
+        </div>
+        <button type="submit" class="btn btn--primary btn--block" id="modal-submit" style="margin-top:var(--space-4)">Создать поездку</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модалка: новое событие -->
+  <div class="modal" id="event-modal" hidden>
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__body" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="event-modal-title">Новое событие</h2>
+        <button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      </header>
+      <form class="modal__content" id="event-form" autocomplete="off">
+        <p class="modal__note" id="event-form-note"></p>
+        <div class="form-group">
+          <label class="form-label" for="event-title-input">Название события</label>
+          <input type="text" class="form-input" id="event-title-input" placeholder="Например: Прогулка по старому городу" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="event-time-input">Время</label>
+            <input type="time" class="form-input" id="event-time-input" value="10:00" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="event-cost-input">Стоимость (₽)</label>
+            <input type="number" class="form-input" id="event-cost-input" placeholder="0" min="0" step="100" value="0" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="event-category-input">Категория</label>
+            <select class="form-input" id="event-category-input"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="event-booking-input">Бронирование</label>
+            <select class="form-input" id="event-booking-input"></select>
+          </div>
+        </div>
+        <label class="form-check">
+          <input type="checkbox" id="event-both-paces" checked>
+          <span>Добавить в оба темпа — «Спокойно» и «Насыщенно»</span>
+        </label>
+        <button type="submit" class="btn btn--primary btn--block" style="margin-top:var(--space-4)">Добавить событие</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модалка: новое бронирование -->
+  <div class="modal" id="booking-modal" hidden>
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__body" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="booking-modal-title">Новое бронирование</h2>
+        <button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      </header>
+      <form class="modal__content" id="booking-form" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="booking-title-input">Название</label>
+          <input type="text" class="form-input" id="booking-title-input" placeholder="Например: Hotel Bairro Alto" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="booking-type-input">Тип</label>
+            <select class="form-input" id="booking-type-input">
+              <option value="flight">Перелёт</option>
+              <option value="hotel">Отель</option>
+              <option value="train">Поезд</option>
+              <option value="excursion">Экскурсия</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="booking-price-input">Стоимость (₽)</label>
+            <input type="number" class="form-input" id="booking-price-input" placeholder="0" min="0" step="500" value="0" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="booking-date-input">Даты</label>
+            <input type="text" class="form-input" id="booking-date-input" placeholder="Например: 14.09 или 12.09 — 18.09" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="booking-status-input">Статус</label>
+            <select class="form-input" id="booking-status-input">
+              <option value="pending">Ожидает подтверждения</option>
+              <option value="confirmed">Подтверждено</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn--primary btn--block" style="margin-top:var(--space-4)">Добавить бронирование</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модалка: подтверждение действия -->
+  <div class="modal modal--confirm" id="confirm-modal" hidden>
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__body" role="alertdialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-text">
+      <header class="modal__header">
+        <h2 class="modal__title" id="confirm-modal-title">Подтвердите действие</h2>
+        <button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      </header>
+      <div class="modal__content">
+        <p class="modal__text" id="confirm-modal-text"></p>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--ghost" data-modal-close>Отмена</button>
+          <button type="button" class="btn btn--danger" id="confirm-modal-ok">Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Мобильная нижняя навигация -->
+  <nav class="bottom-nav" id="bottom-nav" hidden aria-label="Основная навигация">
+    <button type="button" class="bottom-nav__item" data-tab="today" aria-label="Сегодня">
+      <span class="bottom-nav__icon" aria-hidden="true">◎</span>
+      <span class="bottom-nav__label">Сегодня</span>
+    </button>
+    <button type="button" class="bottom-nav__item" data-tab="route" aria-label="Маршрут">
+      <span class="bottom-nav__icon" aria-hidden="true">✦</span>
+      <span class="bottom-nav__label">Маршрут</span>
+    </button>
+    <button type="button" class="bottom-nav__item" data-tab="budget" aria-label="Бюджет">
+      <span class="bottom-nav__icon" aria-hidden="true">₽</span>
+      <span class="bottom-nav__label">Бюджет</span>
+    </button>
+    <button type="button" class="bottom-nav__item" data-tab="checklist" aria-label="Подготовка">
+      <span class="bottom-nav__icon" aria-hidden="true">✓</span>
+      <span class="bottom-nav__label">Подготовка</span>
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
