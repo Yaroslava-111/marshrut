@@ -12,8 +12,8 @@ const TRIP_DEMO = {
   id: 'lisbon-ocean',
   name: 'Лиссабон и океан',
   dates: {
-    start: '2026-09-12',
-    end: '2026-09-18'
+    start: '2027-06-11',
+    end: '2027-06-17'
   },
   routeCities: ['Лиссабон', 'Кашкайш', 'Синтра', 'Эрисейра', 'Океан', 'Лиссабон'],
   totalBudget: 180000,
@@ -27,7 +27,7 @@ const TRIP_DEMO = {
 
   days: [
     {
-      id: 1, date: '2026-09-12', city: 'Лиссабон',
+      id: 1, date: '2027-06-11', city: 'Лиссабон',
       calm: [
         { id: 'd1c1', time: '08:00', title: 'Выезд в аэропорт', category: 'transport', cost: 1800, bookingId: null },
         { id: 'd1c2', time: '11:00', title: 'Перелёт Москва → Лиссабон', category: 'transport', cost: 40000, bookingId: 'b1' },
@@ -43,7 +43,7 @@ const TRIP_DEMO = {
       ]
     },
     {
-      id: 2, date: '2026-09-13', city: 'Лиссабон',
+      id: 2, date: '2027-06-12', city: 'Лиссабон',
       calm: [
         { id: 'd2c1', time: '10:00', title: 'Завтрак на смотровой Канселой', category: 'food', cost: 1800, bookingId: null },
         { id: 'd2c2', time: '11:30', title: 'Трамвай №28 через Альфаму', category: 'transport', cost: 300, bookingId: null },
@@ -59,7 +59,7 @@ const TRIP_DEMO = {
       ]
     },
     {
-      id: 3, date: '2026-09-14', city: 'Кашкайш',
+      id: 3, date: '2027-06-13', city: 'Кашкайш',
       calm: [
         { id: 'd3c1', time: '10:00', title: 'Электричка Лиссабон → Кашкайш', category: 'transport', cost: 900, bookingId: 'b3' },
         { id: 'd3c2', time: '11:30', title: 'Пляж Прайя-да-Райнья', category: 'fun', cost: 0, bookingId: null },
@@ -75,7 +75,7 @@ const TRIP_DEMO = {
       ]
     },
     {
-      id: 4, date: '2026-09-15', city: 'Синтра',
+      id: 4, date: '2027-06-14', city: 'Синтра',
       calm: [
         { id: 'd4c1', time: '09:00', title: 'Поезд в Синтру', category: 'transport', cost: 700, bookingId: null },
         { id: 'd4c2', time: '10:30', title: 'Дворец Пена', category: 'fun', cost: 2500, bookingId: null },
@@ -91,7 +91,7 @@ const TRIP_DEMO = {
       ]
     },
     {
-      id: 5, date: '2026-09-16', city: 'Эрисейра',
+      id: 5, date: '2027-06-15', city: 'Эрисейра',
       calm: [
         { id: 'd5c1', time: '10:00', title: 'Трансфер в Эрисейру', category: 'transport', cost: 2200, bookingId: null },
         { id: 'd5c2', time: '12:00', title: 'Пляж Прайя-душ-Коксуш', category: 'fun', cost: 0, bookingId: null },
@@ -106,7 +106,7 @@ const TRIP_DEMO = {
       ]
     },
     {
-      id: 6, date: '2026-09-17', city: 'Океан',
+      id: 6, date: '2027-06-16', city: 'Океан',
       calm: [
         { id: 'd6c1', time: '10:00', title: 'Яхтинг вдоль побережья', category: 'fun', cost: 6000, bookingId: 'b4' },
         { id: 'd6c2', time: '15:00', title: 'Прогулка вдоль дюн', category: 'fun', cost: 0, bookingId: null },
@@ -121,7 +121,7 @@ const TRIP_DEMO = {
       ]
     },
     {
-      id: 7, date: '2026-09-18', city: 'Лиссабон',
+      id: 7, date: '2027-06-17', city: 'Лиссабон',
       calm: [
         { id: 'd7c1', time: '09:00', title: 'Возвращение в Лиссабон', category: 'transport', cost: 1200, bookingId: null },
         { id: 'd7c2', time: '13:00', title: 'Сувениры и кофе в Бике', category: 'food', cost: 1800, bookingId: null },
@@ -137,10 +137,10 @@ const TRIP_DEMO = {
   ],
 
   bookings: [
-    { id: 'b1', type: 'flight',    title: 'Перелёт Москва ↔ Лиссабон',      date: '12.09 — 18.09', price: 80000, status: 'confirmed' },
-    { id: 'b2', type: 'hotel',     title: 'Hotel Bairro Alto',              date: '12.09 — 18.09', price: 42000, status: 'pending' },
-    { id: 'b3', type: 'train',     title: 'Электричка Лиссабон — Кашкайш',  date: '14.09',         price: 2400,  status: 'confirmed' },
-    { id: 'b4', type: 'excursion', title: 'Яхтинг вдоль побережья',         date: '17.09',         price: 9000,  status: 'pending' }
+    { id: 'b1', type: 'flight',    title: 'Перелёт Москва ↔ Лиссабон',      date: '11.06 — 17.06', price: 80000, status: 'confirmed' },
+    { id: 'b2', type: 'hotel',     title: 'Hotel Bairro Alto',              date: '11.06 — 17.06', price: 42000, status: 'pending' },
+    { id: 'b3', type: 'train',     title: 'Электричка Лиссабон — Кашкайш',  date: '13.06',         price: 2400,  status: 'confirmed' },
+    { id: 'b4', type: 'excursion', title: 'Яхтинг вдоль побережья',         date: '16.06',         price: 9000,  status: 'pending' }
   ],
 
   checklist: {
